@@ -1,0 +1,27 @@
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-layouts/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-inputs/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-dropdowns/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-popups/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-popups/styles/material.css";
+.App {
+  text-align: center;
+}
+
+.loginform {
+  background-color: blueviolet;
+  text-align: center;
+  margin: 10px;
+}
+
+.IMG {
+  min-height: 100vh;
+  margin-top: 5px;
+}
+.IMG img {
+  height: 100vh;
+  width: 1470px;
+}
