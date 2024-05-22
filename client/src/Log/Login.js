@@ -6,10 +6,10 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [store, setStore] = useState([]);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -33,9 +33,10 @@ export default function Login() {
     );
     if (user) {
       localStorage.setItem("loggedInUser", JSON.stringify(user)); // Store the logged-in user's information in localStorage
+      const tok = btoa(`${email}:${password}`);
+      Cookies.set("tok", tok, { expires: 1 });
       if (user.userType === "User") {
         console.log("User Logged in Successfully");
-        toast.success("User Logged in Successfully");
         // Redirect to user page
         navigate("/user");
       } else if (user.userType === "Admin") {

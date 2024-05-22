@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Register() {
   const [store, setStore] = useState([]);
@@ -12,6 +13,7 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     axios.get(`http://localhost:2000/user`).then((res) => {
@@ -19,12 +21,35 @@ export default function Register() {
       console.log(res.data);
     });
   }, []);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const tok = Cookies.get("tok");
+    if (!tok) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const type = ["User", "Admin"];
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    const userExists = store.find((user) => user.email === value);
+    if (userExists) {
+      setEmailError("User with the same email already exists.");
+    } else {
+      setEmailError("");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (emailError) {
+      toast.error(emailError);
+      return;
+    }
     // Check if the email and password combination already exists
     const userExists = store.find((user) => user.email === email);
     if (userExists) {
@@ -91,8 +116,12 @@ export default function Register() {
             placeholder="Enter Your Original Gmail"
             floatLabelType="auto"
             width={300}
-            onChange={(e) => setEmail(e.target.value)}
+            // onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
           />
+          {emailError && (
+            <div style={{ color: "red", marginTop: 5 }}>{emailError}</div>
+          )}
           <br />
           <TextBoxComponent
             type="password"

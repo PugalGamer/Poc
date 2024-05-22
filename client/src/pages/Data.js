@@ -1,11 +1,21 @@
 // Data.js
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function Data() {
   const location = useLocation();
   const { rowData } = location.state || {};
   console.log(rowData);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const tok = Cookies.get("tok");
+    if (!tok) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   return (
     <div>

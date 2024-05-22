@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header.js";
-
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 export default function User() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   useEffect(() => {
@@ -8,6 +9,16 @@ export default function User() {
     setLoggedInUser(user);
   }, []);
   console.log(loggedInUser);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const tok = Cookies.get("tok");
+    if (!tok) {
+      navigate("/login");
+    }
+  }, [navigate]);
+  
   return (
     <div>
       <Header />

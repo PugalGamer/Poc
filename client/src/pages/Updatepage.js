@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import { TextBoxComponent } from "@syncfusion/ej2-react-inputs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Cookies from 'js-cookie'
 
 export default function Updatepage() {
   const [store, setStore] = useState([]);
@@ -19,6 +20,15 @@ export default function Updatepage() {
       console.log(res.data);
     });
   }, []);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const tok = Cookies.get("tok");
+    if (!tok) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
 
   // Function to handle search
   const handleSearch = () => {

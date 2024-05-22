@@ -6,6 +6,9 @@ import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import { TextBoxComponent } from "@syncfusion/ej2-react-inputs";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 export default function Admin() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => {
@@ -21,6 +24,7 @@ export default function Admin() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     axios.get(`http://localhost:2000/user`).then((res) => {
@@ -29,9 +33,33 @@ export default function Admin() {
     });
   }, []);
   console.log(store);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const tok = Cookies.get("tok");
+    if (!tok) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    const userExists = store.find((user) => user.email === value);
+    if (userExists) {
+      setEmailError("User with the same email already exists.");
+    } else {
+      setEmailError("");
+    }
+  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    if (emailError) {
+      toast.error(emailError);
+      return;
+    }
     const userExists = store.find((user) => user.email === email);
     if (userExists) {
       alert("User email already exists!");
@@ -119,9 +147,14 @@ export default function Admin() {
             <TextBoxComponent
               placeholder="Email"
               type="email"
-              onChange={(e) => setEmail(e.target.value)}
+              // onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
+
             />
           </div>
+          {emailError && (
+            <div style={{ color: "red", marginTop: 5 }}>{emailError}</div>
+          )}
           <br />
           <div className="form-group">
             <TextBoxComponent
